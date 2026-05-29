@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            #box div {
+                display: flex;
+                justify-content: space-between;
+                margin: 8px 0;
+                padding: 6px;
+                border: 1px solid black;
+            }
+        </style>
+    </head>
+    <body>
+            <h1>Audran's Habit Tracker</h1>
+            <h2>CAN'T RUSH GREATNESS</h2>
+            <input type="text" id="input" value="" size="25" placeholder="ENTER HABIT">
+            <input type="number" id="intinput" size="25" placeholder="Enter Frequency">
+            <button type="button" id="button" value="button" type="button" id="button">ENTER</button>
+            <div id="box" class="box"></div>
+        <script>
+            const button = document.querySelector("#button")
+
+            button.addEventListener("click", async () =>{
+                const response = await fetch("http://127.0.0.1:5000/add", {
+                    method: "POST",
+                    headers: { 
+                        "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        habit: input.value,
+                        per_week: intinput.value,
+                        left: intinput.value,
+                        streak: ""
+                    })
+                });
+                const data = await response.json()
+                box.innerHTML = data
+                renderHabits(data)
+            });
+
+            window.addEventListener("load", async (event) => {
+                const response = await fetch("http://127.0.0.1:5000/read_habits", {
+                    method: "GET",
+                })
+                const data = await response.json()
+                box.innerHTML = data
+                renderHabits(data)
+            });
+
+            function renderHabits(habits) {
+                box.innerHTML = ""
+                habits.forEach((habit, index) =>{
+                    const row = document.createElement("div");
+                    const span = document.createElement("span");
+
+                span.textContent = `${habit.habit} - Goal: ${habit.per_week} days - | Left: ${habit.left} ||| STREAK: ${habit.streak}`;
+
+                    const delbutton = document.createElement("button");
+                    const donebutton = document.createElement("button");
+                    const adddaybutton = document.createElement("button");
+                    const streakbutton = document.createElement("button");
+
+                    delbutton.innerText ="Delete",
+                    donebutton.innerText ="Done For Today"
+                    adddaybutton.innerText = "Add a Day"
+                    streakbutton.innerText ="I'M ON A STREAK (2 or more days)"
+
+                    
+                    row.appendChild(span);
+                    row.appendChild(delbutton);
+                    row.append(donebutton);
+                    row.append(adddaybutton);
+                    row.append(streakbutton);
+
+                    box.appendChild(row)
+
+                    delbutton.addEventListener("click", async () => {
+                        const response = await fetch("http://127.0.0.1:5000/delete", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({"index": index})
+                        });
+                        const data = await response.json()
+                        renderHabits(data)
+                    })
+                    donebutton.addEventListener("click", async () => {
+                        const response = await fetch("http://127.0.0.1:5000/done", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({"index": index})
+                        });
+                        const data = await response.json()
+                        renderHabits(data)
+                    })
+                    adddaybutton.addEventListener("click", async () =>{
+                        const response = await fetch("http://127.0.0.1:5000/increment", {
+                            method: "POST", 
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({"index": index})
+                        });
+                        const data = await response.json()
+                        renderHabits(data)
+                    })
+                    streakbutton.addEventListener("click", async () => {
+                        const response = await fetch("http://127.0.0.1:5000/streak", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({"index": index})
+                            
+                        })
+                        const data = await response.json()
+                        renderHabits(data)
+                    })
+                })
+            }
+
+                
+
+        
+        </script>
+    </body>
+</html>
