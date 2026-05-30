@@ -7,13 +7,17 @@ import smtplib
 import ssl
 from email.message import EmailMessage
 from datetime import datetime, date, timedelta
+from apscheduler.schedulers.background import BackgroundScheduler
 
 
 
 #What V1 must do (today) Show page (done) / Add habit (name + frequency per week)(done) Save to data/habits.json (done) Read habits and display on page load (done)
 load_dotenv()
+#initialized flask app
 app = Flask(__name__)
 CORS(app)
+#initialized the apscheduler
+scheduler = BackgroundScheduler()
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -112,6 +116,7 @@ def streak():
         json.dump(data, file, indent=4)
     return json.dumps(data)
 
+#function to be called and done at a certain interval in instance every day at 17h17
 def email_function():
     with app.app_context():
 
@@ -121,8 +126,7 @@ def email_function():
             print("file opened")
             data = json.load(file)
             for habit in data:
-                
-                summary_string = str(habit["habit"]) + "\n" + str(habit["left"]) + "\n" + str(habit["completion"])
+                summary_string = "Habit: " + str(habit["habit"]) + "\n" + "Days left: " + str(habit["left"]) + "\n" + "Completions dates: " + str(habit["completion"]).replace("[", "").replace("]", "").replace("'", "").replace("'","")
                 print(summary_string)
         with open("habits.json", "w") as file:
             json.dump(data, file)
@@ -156,7 +160,11 @@ def email_function():
             print("SENT")
         except Exception as e:
             print("ERROR:", e)
-email_function()
+if __name__ == '__main__':
+    #defined the scheduler with the interval, date or cron job and necessary parameters
+    scheduler.add_job(id = "email_function", func = email_function, trigger = "cron", day_of_week = "mon-sun", hour = 9, minute = 47)
+    scheduler.start()
+    app.run(debug=True, use_reloader=False)
 #no finally needed since with open closes automatically
 
 
