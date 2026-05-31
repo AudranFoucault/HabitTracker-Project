@@ -1,1 +1,16 @@
-[{"habit": "Coding", "per_week": "6", "left": 5, "streak": "", "completion": ["2026-05-23", "2026-05-24"]}]
+[
+    {
+        "habit": "Coding",
+        "per_week": 7,
+        "left": 7,
+        "streak": "",
+        "completion": []
+    },
+    {
+        "habit": "Reading 20 pages/day",
+        "per_week": 30,
+        "left": 30,
+        "streak": "",
+        "completion": []
+    }
+]

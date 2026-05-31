@@ -1,17 +1,37 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
         <style>
+            input, textarea {
+                background-color: black;
+                color: white
+            }
             #box div {
+                background-color: black;
                 display: flex;
                 justify-content: space-between;
                 margin: 8px 0;
-                padding: 6px;
-                border: 1px solid black;
+                padding-top: 50px;
+                padding-right: 30px;
+                padding-bottom: 50px;
+                padding-left: 80px;
+                border: 2px solid rgb(255, 255, 255);
+                border-radius: 15px 50px;
             }
+            body {
+                text-align: center;
+                font-family: "Space Grotesk", sans-serif;
+                color: rgb(255, 255, 255);
+                font-optical-sizing: auto;
+                font-style: normal;
+            }
+
         </style>
     </head>
-    <body>
+    <body style="background-color: rgb(11, 10, 10);">
             <h1>Audran's Habit Tracker</h1>
             <h2>CAN'T RUSH GREATNESS</h2>
             <input type="text" id="input" value="" size="25" placeholder="ENTER HABIT">
@@ -56,9 +76,18 @@
                 span.textContent = `${habit.habit} - Goal: ${habit.per_week} days - | Left: ${habit.left} ||| STREAK: ${habit.streak}`;
 
                     const delbutton = document.createElement("button");
+                    //chnage button color AND text color:
+                    delbutton.style.backgroundColor = "red"
+                    delbutton.style.color ="white"
                     const donebutton = document.createElement("button");
+                    donebutton.style.backgroundColor = "green"
+                    donebutton.style.color ="white"
                     const adddaybutton = document.createElement("button");
+                    adddaybutton.style.backgroundColor = "orange"
+                    adddaybutton.style.color = "white"
                     const streakbutton = document.createElement("button");
+                    streakbutton.style.backgroundColor = "purple"
+                    streakbutton.style.color ="white"
 
                     delbutton.innerText ="Delete",
                     donebutton.innerText ="Done For Today"
